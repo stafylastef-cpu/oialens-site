@@ -1,0 +1,84 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Get unique categories
+const categories = ['All', ...new Set(posts.map(post => post.data.category))];
+---
+
+<Layout 
+  title="The Journal: Oia Photo Guide, Santorini Tips & Hidden Spots | Oia Lens"
+  description="Insider guides, photo spot coordinates, crowd navigation advice, and packing tips for Oia and Santorini."
+>
+  <Header />
+
+  <main class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs uppercase font-bold tracking-widest text-[#02529C] mb-2 block">Travel & Photography Guides</span>
+        <h1 class="text-4xl sm:text-5xl font-serif font-bold text-slate-900">The Journal</h1>
+        <p class="mt-4 text-base sm:text-lg text-slate-600">
+          Practical advice, verified angles, lighting recommendations, and local insights to help you capture Santorini with certainty.
+        </p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none">
+        {categories.map((cat, idx) => (
+          <span class={`px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition-colors whitespace-nowrap ${idx === 0 ? 'bg-[#02529C] text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300'}`}>
+            {cat}
+          </span>
+        ))}
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedPosts.map((post) => (
+          <article class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-lg transition-all group flex flex-col">
+            {post.data.image && (
+              <a href={`/the-journal/${post.id}`} class="aspect-[16/10] overflow-hidden bg-slate-100 block">
+                <img 
+                  src={post.data.image} 
+                  alt={post.data.imageAlt || post.data.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </a>
+            )}
+            <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-3 text-xs text-slate-500 mb-3">
+                  <span class="px-2.5 py-1 rounded bg-blue-50 text-[#02529C] font-semibold">{post.data.category}</span>
+                  <span>·</span>
+                  <span>{post.data.readTime}</span>
+                </div>
+                <h2 class="text-xl font-bold font-serif text-slate-900 group-hover:text-[#02529C] transition-colors leading-snug">
+                  <a href={`/the-journal/${post.id}`}>
+                    {post.data.title}
+                  </a>
+                </h2>
+                <p class="mt-3 text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                  {post.data.description}
+                </p>
+              </div>
+
+              <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                <a href={`/the-journal/${post.id}`} class="text-[#02529C] font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Read guide &rarr;
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,352 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const recentPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://oialens.com/#website",
+      "url": "https://oialens.com/",
+      "name": "Oia Lens",
+      "description": "Interactive GPS guide and curated photo spots map for Oia and Santorini, Greece.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Oia Lens",
+        "url": "https://oialens.com/",
+        "logo": "https://oialens.com/favicon.svg"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://oialens.com/#organization",
+      "name": "Oia Lens",
+      "url": "https://oialens.com/",
+      "email": "hello@oialens.com"
+    }
+  ]
+};
+---
+
+<Layout 
+  title="Oia Photo Spots Guide: Santorini GPS Map for Secret Photo Spots | Oia Lens"
+  description="Discover the best photo spots in Oia, Santorini. Get exact GPS coordinates, optimal light timing, sunset crowd advice, and curated routes."
+  schema={websiteSchema}
+>
+  <Header />
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32 bg-gradient-to-b from-[#FAF9F6] via-blue-50/30 to-[#FAF9F6]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-[#02529C] text-xs font-semibold uppercase tracking-wider mb-6">
+          <span class="w-2 h-2 rounded-full bg-[#02529C] animate-pulse"></span>
+          Interactive GPS Photography Guide
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 font-serif max-w-4xl mx-auto leading-tight">
+          Oia, Exactly How You Pictured It
+        </h1>
+
+        <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed">
+          Navigate the village with the first interactive guide to Oia’s most famous and hidden photo spots.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a 
+            href="https://app.oialens.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="w-full sm:w-auto px-8 py-4 rounded-full bg-[#02529C] hover:bg-[#013e75] text-white font-semibold text-base shadow-xl shadow-blue-900/15 hover:shadow-2xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+          >
+            <span>Get the Map</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+          <a 
+            href="#features" 
+            class="w-full sm:w-auto px-8 py-4 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-semibold text-base border border-slate-200/80 shadow-sm transition-all"
+          >
+            Explore Features
+          </a>
+        </div>
+
+        <!-- Hero Visual / Mockup Preview -->
+        <div class="mt-16 max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 bg-white">
+          <div class="relative aspect-[16/9] sm:aspect-[21/9] bg-slate-900 overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1600&q=80" 
+              alt="Oia Santorini Blue Domes at Golden Hour" 
+              class="w-full h-full object-cover opacity-90"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6 sm:p-10">
+              <div class="text-left text-white max-w-xl">
+                <span class="px-2.5 py-1 rounded bg-[#02529C] text-xs font-semibold uppercase tracking-wider">Spot #01</span>
+                <h3 class="text-2xl sm:text-3xl font-bold font-serif mt-2">The Three Blue Domes Viewpoint</h3>
+                <p class="text-sm text-slate-300 mt-1">Exact Stand Coordinates: 36.4618° N, 25.3753° E · Optimal Light: 07:15 AM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRO STATEMENT SECTION -->
+    <section class="py-20 bg-white border-y border-slate-100">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl sm:text-3xl font-serif font-bold text-slate-900 mb-6">
+          Best Oia Photo Spots: A Practical Map of Landmarks & Hidden Gems
+        </h2>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed">
+          Don't leave your Santorini memories to chance. <strong class="text-slate-900">Oia Lens</strong> is a curated information hub and digital guide designed to help you navigate the village with certainty. We strip away the commercial clutter to provide free town advice, pro photography tips, and essential route information. Whether you are looking for the iconic Blue Domes or searching for a quiet corner to watch the sunset, we act as your practical assistant to ensure you spend less time getting lost and more time capturing the soul of the island.
+        </p>
+      </div>
+    </section>
+
+    <!-- CORE FEATURES SECTION -->
+    <section id="features" class="py-24 bg-[#FAF9F6]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-xs uppercase font-bold tracking-widest text-[#02529C] mb-3">Designed For Precision</h2>
+          <p class="text-3xl sm:text-4xl font-serif font-bold text-slate-900">
+            Never Guess an Angle Again
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#02529C] flex items-center justify-center mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">The Exact Tile for the Perfect Shot</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Don't waste time guessing the angle. We don't just guide you to the location; we provide exact GPS pins and high-quality reference photos taken on-site, ensuring you know precisely where to stand for the perfect framing every time.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">Optimize Your Lighting</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Capture Oia when the light is just right. Our guide provides specific advice on optimal timing for every location, ensuring you capture iconic blue domes and secret viewpoints at the precise moment the solar movement aligns with the landscape.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">Find Your Inspiration Instantly</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Stop searching through complicated lists and start exploring visually. With a single tap on the gallery icon, a visual pop-up reveals high-quality reference photos for every iconic landmark and hidden gem on your map.
+            </p>
+          </div>
+        </div>
+
+        <!-- Feature 4 Banner: Dynamic Dashboard -->
+        <div class="mt-8 bg-gradient-to-r from-slate-900 via-slate-800 to-[#02529C] rounded-3xl p-8 sm:p-12 text-white shadow-xl">
+          <div class="max-w-3xl">
+            <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-semibold uppercase tracking-wider">Dynamic Concierge</span>
+            <h3 class="text-2xl sm:text-3xl font-serif font-bold mt-4 mb-4">
+              Our dynamic dashboard acts as your daily digital concierge, ensuring you stay ahead of the elements.
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+              <div class="border-l-2 border-amber-400 pl-4">
+                <h4 class="font-bold text-amber-300 text-base">Sunset & Light Timing</h4>
+                <p class="text-sm text-slate-300 mt-1">Access precise timing for golden hour to ensure you are in position for high-reward compositions.</p>
+              </div>
+              <div class="border-l-2 border-cyan-400 pl-4">
+                <h4 class="font-bold text-cyan-300 text-base">Wind & Aegean Forecast</h4>
+                <p class="text-sm text-slate-300 mt-1">Monitor real-time Aegean conditions to protect your plans—and outfits—from unexpected gusts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPLORE OUR GUIDES -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-xs uppercase font-bold tracking-widest text-[#02529C] mb-3">Curated Packs</h2>
+          <p class="text-3xl sm:text-4xl font-serif font-bold text-slate-900">Explore Our Guides</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Card 1 -->
+          <div class="border border-slate-200 rounded-2xl p-8 bg-[#FAF9F6] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-slate-900 font-serif">Sunset Pack</h3>
+                <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">Coming soon</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Escape the castle crowds for serene, secret vantage points during the world-famous golden hour.
+              </p>
+            </div>
+            <div class="mt-8 pt-4 border-t border-slate-200">
+              <span class="text-xs text-slate-500 font-medium">Caldera & Sunset Trails</span>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="border-2 border-[#02529C] rounded-2xl p-8 bg-white flex flex-col justify-between shadow-lg relative">
+            <div class="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-[#02529C] text-white text-xs font-semibold">
+              Popular
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-slate-900 font-serif">Architecture & Legends</h3>
+                <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-[#02529C]">Included</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Navigate the village legends. Precise GPS for the Blue Domes, Oia Castle, Windmills, and iconic viewpoints to experience our "Exact Stand" precision at no cost.
+              </p>
+            </div>
+            <div class="mt-8 pt-4 border-t border-slate-200">
+              <a href="https://app.oialens.com/" target="_blank" rel="noopener" class="text-sm font-semibold text-[#02529C] hover:underline flex items-center gap-1">
+                Open in App <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="border border-slate-200 rounded-2xl p-8 bg-[#FAF9F6] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-slate-900 font-serif">Full Experience</h3>
+                <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">All-Access</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Unlock the soul of Oia. Total access to all collections—Architecture, Sunset, and Caldera—including every hidden gem, local pro tip, and solar update.
+              </p>
+            </div>
+            <div class="mt-8 pt-4 border-t border-slate-200">
+              <span class="text-xs text-slate-500 font-medium">Complete Insider Access</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE JOURNAL (BLOG) TEASER SECTION -->
+    <section class="py-24 bg-[#FAF9F6] border-t border-slate-200/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
+          <div>
+            <span class="text-xs uppercase font-bold tracking-widest text-[#02529C] mb-2 block">Insights & Travel Tips</span>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-slate-900">The Journal</h2>
+          </div>
+          <a href="/the-journal" class="mt-4 sm:mt-0 text-sm font-semibold text-[#02529C] hover:underline flex items-center gap-1">
+            View All Articles <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {recentPosts.map((post) => (
+            <article class="bg-white rounded-2xl overflow-hidden border border-slate-200/70 shadow-sm hover:shadow-md transition-all group flex flex-col">
+              {post.data.image && (
+                <div class="aspect-[16/10] overflow-hidden bg-slate-100">
+                  <img 
+                    src={post.data.image} 
+                    alt={post.data.imageAlt || post.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              )}
+              <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center gap-3 text-xs text-slate-500 mb-3">
+                    <span class="px-2 py-0.5 rounded bg-blue-50 text-[#02529C] font-medium">{post.data.category}</span>
+                    <span>·</span>
+                    <span>{post.data.readTime}</span>
+                  </div>
+                  <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#02529C] transition-colors leading-snug">
+                    <a href={`/the-journal/${post.id}`}>
+                      {post.data.title}
+                    </a>
+                  </h3>
+                  <p class="mt-2 text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                    {post.data.description}
+                  </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                  <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  <span class="text-[#02529C] font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                    Read post &rarr;
+                  </span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-24 bg-white border-t border-slate-100">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+          <span class="text-xs uppercase font-bold tracking-widest text-[#02529C]">Our Story</span>
+          <h2 class="text-3xl sm:text-4xl font-serif font-bold text-slate-900 mt-2">About Us</h2>
+        </div>
+        <div class="prose prose-slate lg:prose-lg mx-auto text-slate-600 leading-relaxed">
+          <p>
+            Oia is a masterpiece of light and stone, yet its true beauty is often obscured by the beautiful chaos of crowded alleys and minimal navigation. While most travelers are left as lost wanderers in a maze of dead-end streets, we have turned years of local living and insider experience into a practical assistant that reveals the town’s most iconic landmarks and untouched hidden gems.
+          </p>
+          <p>
+            Every coordinate in this guide was captured on the ground to provide the exact location for the perfect framing, ensuring you move beyond the surface-level tourist traps to capture the unique architecture, volcanic caldera vistas, and the world-famous sunset at the precise moment the solar movement aligns with the landscape.
+          </p>
+          <p>
+            We’ve stripped away the commercial noise to provide real-time navigation and verified pro tips, giving you the certainty to spend less time searching and more time creating lasting, high-reward memories of Santorini.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM CTA BANNER -->
+    <section class="py-20 bg-[#02529C] text-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4">
+          The First Interactive Map of Oia, Santorini
+        </h2>
+        <p class="text-lg text-blue-100 mb-8 max-w-xl mx-auto">
+          Find famous landmarks and secret photo spots with ease. Start exploring right from your phone.
+        </p>
+        <a 
+          href="https://app.oialens.com/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-[#02529C] hover:bg-slate-100 font-bold text-base shadow-xl transition-all"
+        >
+          <span>Get the Map</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

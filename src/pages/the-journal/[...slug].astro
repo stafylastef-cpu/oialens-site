@@ -1,0 +1,227 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const articleUrl = `https://oialens.com/the-journal/${post.id}`;
+const articleImageUrl = post.data.image?.startsWith('http') 
+  ? post.data.image 
+  : `https://oialens.com${post.data.image || '/favicon.svg'}`;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": `${articleUrl}#article`,
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://oialens.com/#website",
+        "name": "Oia Lens"
+      },
+      "headline": post.data.title,
+      "description": post.data.description,
+      "url": articleUrl,
+      "datePublished": post.data.pubDate.toISOString(),
+      "dateModified": post.data.pubDate.toISOString(),
+      "author": {
+        "@type": "Person",
+        "name": post.data.author || "Oia Lens Team"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Oia Lens",
+        "url": "https://oialens.com/",
+        "logo": "https://oialens.com/favicon.svg"
+      },
+      "image": articleImageUrl,
+      "articleSection": post.data.category,
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${articleUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://oialens.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "The Journal",
+          "item": "https://oialens.com/the-journal"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": post.data.title,
+          "item": articleUrl
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout 
+  title={`${post.data.title} | Oia Lens Journal`}
+  description={post.data.description}
+  image={post.data.image}
+  imageAlt={post.data.imageAlt || post.data.title}
+  type="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  author={post.data.author}
+  schema={articleSchema}
+>
+  <Header />
+
+  <article class="py-12 sm:py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-8">
+        <a href="/" class="hover:text-slate-900 transition-colors">Home</a>
+        <span>/</span>
+        <a href="/the-journal" class="hover:text-slate-900 transition-colors">The Journal</a>
+        <span>/</span>
+        <span class="text-slate-900 font-medium truncate max-w-xs">{post.data.title}</span>
+      </nav>
+
+      <!-- Post Header -->
+      <header class="mb-10 text-center sm:text-left">
+        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-4 justify-center sm:justify-start">
+          <span class="px-3 py-1 rounded-full bg-blue-50 text-[#02529C] font-semibold uppercase tracking-wider">
+            {post.data.category}
+          </span>
+          <span>·</span>
+          <span>{post.data.readTime}</span>
+          <span>·</span>
+          <time datetime={post.data.pubDate.toISOString()}>
+            {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </time>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl font-serif font-bold text-slate-900 leading-tight">
+          {post.data.title}
+        </h1>
+
+        <p class="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed font-normal">
+          {post.data.description}
+        </p>
+
+        <div class="mt-6 pt-6 border-t border-slate-200/80 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-[#02529C] text-white flex items-center justify-center font-bold text-xs">
+            OL
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-slate-900">{post.data.author}</p>
+            <p class="text-xs text-slate-500">Santorini Photography & Route Specialists</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Featured Image -->
+      {post.data.image && (
+        <div class="rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 mb-12 bg-slate-100 aspect-[16/9]">
+          <img 
+            src={post.data.image} 
+            alt={post.data.imageAlt || post.data.title}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      <!-- Post Content -->
+      <div class="article-content text-slate-700 leading-relaxed space-y-6 text-base sm:text-lg">
+        <Content />
+      </div>
+
+      <!-- In-Article App Banner CTA -->
+      <div class="mt-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-blue-50 via-white to-blue-50 border border-blue-200/70 shadow-sm text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="px-3 py-1 rounded bg-[#02529C] text-white text-xs font-semibold uppercase tracking-wider">
+            Interactive GPS App
+          </span>
+          <h3 class="text-2xl font-serif font-bold text-slate-900 mt-2">Get Exact GPS Pins for These Spots</h3>
+          <p class="text-sm text-slate-600 mt-1 max-w-lg">
+            Skip the crowds and find the exact coordinates to frame these shots with our interactive Oia map.
+          </p>
+        </div>
+        <a 
+          href="https://app.oialens.com/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="shrink-0 px-6 py-3.5 rounded-full bg-[#02529C] hover:bg-blue-700 text-white font-semibold text-sm shadow-md transition-all"
+        >
+          Open Oia Lens App &rarr;
+        </a>
+      </div>
+
+      <!-- Back to Journal Link -->
+      <div class="mt-12 text-center">
+        <a href="/the-journal" class="inline-flex items-center gap-2 text-sm font-semibold text-[#02529C] hover:underline">
+          &larr; Back to all guides in The Journal
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  .article-content h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .article-content h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .article-content p {
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+  }
+  .article-content ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    space-y: 0.5rem;
+  }
+  .article-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+  .article-content strong {
+    color: #0f172a;
+    font-weight: 600;
+  }
+  .article-content hr {
+    border-color: #e2e8f0;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+</style>

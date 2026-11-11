@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-caldera: #111827;
+    --color-aegean: #02529C;
+    --color-aegean-light: #EBF4FC;
+    --color-ochre: #C87D55;
+    --color-cycladic-white: #FCFCFD;
+    --color-stone: #6B7280;
+  }
+
+  body {
+    background-color: var(--color-cycladic-white);
+    color: #1F2937;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
