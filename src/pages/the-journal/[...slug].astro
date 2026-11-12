@@ -5,7 +5,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = await getCollection('blog', ({ data }) => data.pubDate <= new Date());
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -79,7 +79,7 @@ const articleSchema = {
 ---
 
 <Layout 
-  title={`${post.data.title} | Oia Lens Journal`}
+  title={`${post.data.seoTitle ?? post.data.title} | Oia Lens Journal`}
   description={post.data.description}
   image={post.data.image}
   imageAlt={post.data.imageAlt || post.data.title}
@@ -218,6 +218,27 @@ const articleSchema = {
   .article-content strong {
     color: #0f172a;
     font-weight: 600;
+  }
+  .article-content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+    display: block;
+    overflow-x: auto;
+  }
+  .article-content th {
+    background: #02529C;
+    color: #fff;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+  }
+  .article-content td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.6rem 0.8rem;
+  }
+  .article-content tbody tr:nth-child(even) {
+    background: #f8fafc;
   }
   .article-content hr {
     border-color: #e2e8f0;

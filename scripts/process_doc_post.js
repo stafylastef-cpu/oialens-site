@@ -15,12 +15,25 @@ const publicImagesDir = path.resolve(projectRoot, 'public/images');
  */
 export async function optimizeImage(inputBufferOrPath, outputFilename) {
   const outputPath = path.resolve(publicImagesDir, outputFilename);
-  
-  await sharp(inputBufferOrPath)
-    .rotate() // auto-orient based on EXIF
-    .resize({ width: 1600, withoutEnlargement: true })
-    .modulate({ brightness: 1.02, saturation: 1.05 }) // subtle enhancement for travel vibrancy
-    .webp({ quality: 82, effort: 6 })
+  const base = sharp(inputBufferOrPath).rotate(); // auto-orient based on EXIF
+  const { width, height } = await sharp(await base.clone().toBuffer()).metadata();
+  const isPortrait = height > width * 1.1;
+
+  // Portrait photos: keep a Pinterest-ready portrait copy, then smart-crop a 16:9 version for the site
+  if (isPortrait) {
+    const portraitName = outputFilename.replace(/\.webp$/, '-portrait.webp');
+    await base.clone().resize({ width: 1000, withoutEnlargement: true })
+      .webp({ quality: 72, effort: 6 }).toFile(path.resolve(publicImagesDir, portraitName));
+    console.log(`📌 Portrait copy saved for Pinterest: ${portraitName}`);
+  }
+
+  const pipeline = isPortrait
+    ? base.clone().resize({ width: 1400, height: 788, fit: 'cover', position: sharp.strategy.attention })
+    : base.clone().resize({ width: 1400, withoutEnlargement: true });
+
+  await pipeline
+    .modulate({ saturation: 1.06 }) // subtle vibrancy for travel photos
+    .webp({ quality: 74, effort: 6, smartSubsample: true })
     .toFile(outputPath);
 
   const stats = fs.statSync(outputPath);
